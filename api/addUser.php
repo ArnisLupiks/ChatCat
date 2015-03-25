@@ -1,6 +1,5 @@
 <?php
     header("Access-Control-Allow-Origin: *");
-    header("Access-Control-Allow-Methods: GET,HEAD,PUT,PATCH,POST,DELETE");
 
     require_once ("php_includes/db_conn.php");
 
@@ -14,13 +13,12 @@
     $data = json_decode(file_get_contents("php://input"));
     $usrid =$data->uid;
     $name = $data->name;
-    $username = $data->username;
-    $email = $data->email;
-    $surname = $data->surname;
+    $type = $data->type;
+    $token = $data->token;
     $picture = $data->picture;
     //execute
       //selects from database user id and email
-      $query = "SELECT email FROM chatUsers WHERE uid = '$usrid'";
+      $query = "SELECT uid FROM chatUsers WHERE uid = '$usrid'";
       $res = $mysqli->query($query) or die($mysqli->error.__LINE__);
       $res = $mysqli->affected_rows;
 
@@ -28,7 +26,7 @@
       if($res = $mysqli->affected_rows > 0){
           //do update on user table
           echo "User already exists here";
-          $query = "UPDATE chatUsers SET name = '$name', username = '$username', surname = '$surname', email = '$email'
+          $query = "UPDATE chatUsers SET name = '$name', type = '$type', token = '$token', picture = '$picture'
                    WHERE uid = '$usrid'";
                    $result = $mysqli->query($query) or die($mysqli->error.__LINE__);
                    $result = $mysqli->affected_rows;
@@ -36,7 +34,7 @@
       }else{
         //insert new user in database.
         //echo 'there is no user like this, we are storing it in our database';
-        $query="INSERT INTO chatUsers (uid,name,username,surname,email,picture) VALUES ('$usrid','$name','$username', '$surname', '$email', '$picture')";
+        $query="INSERT INTO chatUsers (uid,name,type,token,picture) VALUES ('$usrid','$name', '$type', '$token', '$picture')";
         $result = $mysqli->query($query) or die($mysqli->error.__LINE__);
         $result = $mysqli->affected_rows;
       }
